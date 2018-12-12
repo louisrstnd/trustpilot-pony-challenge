@@ -30,9 +30,9 @@ nav{
   cursor:pointer;
   /*display:inline-block;*/
   text-align: center;
-  font-size:0.5em;
+  font-size:1em;
   box-sizing: border-box;
-
+  font-weight: bold;
   transition: all 0.3s linear;
   
 
@@ -62,9 +62,9 @@ nav{
   background-size: cover;
 
 }
-.exitPath{
+/* .exitPath{
   background-color : rgba(255, 204, 210, .7);
-}
+} */
 .exit{
     background: url('./door.png')  no-repeat;
     background-size: contain;

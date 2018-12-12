@@ -36,7 +36,7 @@ class Element extends Component {
     return (
 
       <div className ={elementClass.join(" ")} style={elementStyle}>
-        {//this.props.element.key
+        {isExitPath ? "." : ""
         }
        </div>
       

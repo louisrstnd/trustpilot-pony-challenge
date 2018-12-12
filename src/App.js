@@ -26,14 +26,16 @@ class App extends Component {
       mazeId: '',
       width: 0,
       height: 0,
-      walls: [],
+      walls: [[]],
       pony: 0,
       domokun: 0,
       exit: 0,
       exitPath: [],
       directions: [],
       backgroundUrl: '',
-      active: true
+      active: true, 
+      newWidth: 15,
+      newHeight: 15
     }
   }
 
@@ -44,12 +46,15 @@ class App extends Component {
 
  
   createMaze = (event) => {
+    let {newWidth, newHeight} = this.state;
+  
+    console.log(newWidth, newHeight)
     fetch("https://ponychallenge.trustpilot.com/pony-challenge/maze", {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        "maze-width": 20,
-        "maze-height": 15,
+        "maze-width": Number(newWidth),
+        "maze-height": Number(newHeight),
         "maze-player-name": "Fluttershy",
         "difficulty": 2
       })
@@ -68,6 +73,10 @@ class App extends Component {
   }
 
   refreshMaze = (event) => {
+    if(this.state.mazeId === ''){
+      return;
+    }
+
     fetch("https://ponychallenge.trustpilot.com/pony-challenge/maze/" + this.state.mazeId)
     .then(response => response.json())
     .then(response => {
@@ -213,7 +222,7 @@ class App extends Component {
     return Array.from(directions);
   }
 
-  isSouthWall(coords) {
+  isSouthWall= (coords) => {
     const { walls, height } = this.state;
     if (coords[0] === height - 1) {
       return true;
@@ -225,7 +234,7 @@ class App extends Component {
     return false;
   }
 
-  IsEastWall(coords) {
+  IsEastWall = (coords) => {
     const { walls, width } = this.state;
     if (coords[1] === width - 1) {
       return true;
@@ -304,6 +313,15 @@ class App extends Component {
     this.setState({ mazeId: event.target.value })
 
   }
+  onDimChange = (event) =>{
+    if (event.target.id === "width"){
+      this.setState({newWidth : event.target.value})
+    }
+    if (event.target.id === "height"){
+      this.setState({newHeight : event.target.value})
+    }
+    console.log(event.target.value)
+  }
 
   render() {
     const rows = [];
@@ -313,7 +331,7 @@ class App extends Component {
     const height = this.state.height;
     const width = this.state.width;
     
-
+ 
     for (i = 0; i < height; i++) {
       const row = []
       for (j = 0; j < width; j++) {
@@ -343,12 +361,27 @@ class App extends Component {
 
     return (
       <div>
-        <header className="bg-black-50 w-100 ph3 pv3 pv4-ns ph4-m ph5-l pa4">
-        <nav className="f6 fw6 ttu tracked" >
+        <header className="bg-black-40 w-100 pv3 ph4-m ph5-l pa4">
+        <nav className="f6 fw6  tracked" >
+        <div className="measure">
+        <label htmlFor="width" className="select-label db mb2 pr3">Select maze width</label>
+        <select id="width"  onChange={this.onDimChange}>
+    <option value="15">15</option>
+    <option value="20">20</option>
+    <option value="25">25</option>
+      </select>
+      </div>
+      <div className="measure">
+      <label htmlFor="height" className="select-label db mb2 pr3">Select maze height</label>
+        <select id="height"  onChange={this.onDimChange}>
+    <option value="15">15</option>
+    <option value="20">20</option>
+    <option value="25">25</option>
+      </select>
+      </div>
         <button className="f6 link dim br2 ph3 pv2 mb2 dib white bg-hot-pink" onClick={this.createMaze}>Create new Maze</button>
-        <button className="f6 link dim br2 ph3 pv2 mb2 dib white bg-hot-pink" id="loadButton" onClick={this.refreshMaze}>load maze</button>
-        <input className ="input-reset ba b--black-20 pa2 mb2 db w-20" type="text" default-value="enter maze id" onChange={this.onIdChange} />
-        <button className="f6 link dim br2 ph3 pv2 mb2 dib white bg-hot-pink" id="autoplay" onClick={this.autoPlay}> auto play</button>
+         <button className="f6 link dim br2 ph3 pv2 mb2 dib white bg-hot-pink" id="autoplay" onClick={this.autoPlay}> auto play</button>
+        <label><span className="normal black-60"> Use keyboard arrows to move the pony or click autoplay !</span></label>
         </nav>
         </header>
         <div className="container pa4" style={{backgroundImage : `url(${this.state.backgroundUrl})`
