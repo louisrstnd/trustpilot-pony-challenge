@@ -1,32 +1,71 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+nav{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  
+  
+  
+  
+}
+.row{
+  display: flex;
+  
 }
 
-.App-link {
-  color: #61dafb;
+.element {
+  cursor:pointer;
+  /*display:inline-block;*/
+  text-align: center;
+  font-size:0.5em;
+  box-sizing: border-box;
+
+  transition: all 0.3s linear;
+  
+
+
+    /* box-shadow: inset 0 0 0 3px #149df2; */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.north{
+  border-top: 2px solid  black;
+}
+.east{
+  border-right:2px solid  black;
+}
+.south{
+  border-bottom:2px solid black;
+}
+.west{
+  border-left: 2px solid black;
+}
+.pony{
+  background: url('./pony.png')  no-repeat;
+  background-size: cover;
+  
+}
+.domokun{
+  background: url('./domokun.png')  no-repeat;
+  background-size: cover;
+
+}
+.exitPath{
+  background-color : rgba(255, 204, 210, .7);
+}
+.exit{
+    background: url('./door.png')  no-repeat;
+    background-size: contain;
 }
