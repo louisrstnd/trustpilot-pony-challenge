@@ -36,13 +36,14 @@ class App extends Component {
       backgroundUrl: '',
       active: true, 
       newWidth: 15,
-      newHeight: 15
+      newHeight: 15,
+      auto: false
     }
   }
 
 
   componentWillMount() {
-    document.addEventListener("keyup", this.moveKey);
+    document.addEventListener("keydown", this.moveKey);
   }
 
  
@@ -90,44 +91,24 @@ class App extends Component {
         , exit: response["end-point"][0]
         
   
-      })
-      //console.log(response.data)
-    }
-    
-    ).then(this.findPath)
+      },this.findPath)
+     
+    })
 
   }
 
   autoPlay = () =>{
-    
+    this.setState({auto: true}, this.movePoney)
    
-    const autoPlayInterval = setInterval(
-      () =>{
-        
-        const {pony, domokun, directions} = this.state;
-        let direction = directions[0];
-
-        // handle domokun:
-        const nextPosition = this.coordinatesToIndex(this.getNextPosition(pony, directions[0]))
-        
-        if (this.isDomokunAround(nextPosition)){
-          const available = new Set(this.getAvailableDirections(pony));
-          available.delete(directions[0]);
-          direction = Array.from(available)[0];
-          console.log("domokun ahead !! new direction : ", direction)
-          
-        }
-
-         this.movePoney(direction, autoPlayInterval);
-        
- 
-      }
-      , 200
-    )
-
   }
-  movePoney = (direction, interval) =>{
-   
+  movePoney = (direction ='', interval) =>{
+    const {directions, active} = this.state;
+    if(!active){
+      return;
+    }
+    if(direction === ''){
+      direction = directions[0];
+    }
     fetch("https://ponychallenge.trustpilot.com/pony-challenge/maze/" + this.state.mazeId, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -139,25 +120,24 @@ class App extends Component {
         
         if(response.state !== "active"){
           this.setState({backgroundUrl: "https://ponychallenge.trustpilot.com/" +response["hidden-url"]
-                        , active : false},this.refreshMaze)
-                       if(interval !== undefined){
-                        clearInterval(interval)
-                       }
+                        , active : false
+                        , auto : false},this.refreshMaze)
+            ;
           
          
         }else{
         this.refreshMaze();
-        }
-      })
+        }})
+      }
 
    
-  }
+  
 
   moveKey = (event) => {
 
     if (event.key in directions) {
       
-      this.movePoney(directions[event.key])
+     this.setState({auto:false}, this.movePoney(directions[event.key]));
       
         
     }
@@ -166,12 +146,21 @@ class App extends Component {
   }
 
   createPath = (start, direction, path, exit, directions) => {
-
+    const {auto, active} = this.state;
     const possibleDirections = this.getAvailableDirections(start);
-
+    
     if (start === exit) {
-      this.setState({exitPath : path});
-      this.setState({directions : directions});
+     
+      if(auto && active){
+       
+      this.setState({exitPath : path
+                    , directions: directions}
+                    , this.movePoney);
+      }
+      else{
+        this.setState({exitPath : path
+          , directions: directions})
+      }
     }
     for (let i in possibleDirections) {
       if (direction === undefined || possibleDirections[i] !== opposite[direction]) {
@@ -305,9 +294,10 @@ class App extends Component {
 
   findPath = () => {
     const {pony, exit } = this.state;
-
+    
     this.createPath(pony, undefined, [pony], exit, []);
-
+    
+    
   }
 
 
@@ -322,7 +312,7 @@ class App extends Component {
     if (event.target.id === "height"){
       this.setState({newHeight : event.target.value})
     }
-    console.log(event.target.value)
+    
   }
 
   render() {
