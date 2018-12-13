@@ -27,12 +27,13 @@ nav{
 }
 
 .element {
-  cursor:pointer;
+  
   /*display:inline-block;*/
   text-align: center;
-  font-size:1em;
-  box-sizing: border-box;
+  font-size:1rem;
+  
   font-weight: bold;
+  color: grey;
   transition: all 0.3s linear;
   
 
@@ -68,4 +69,10 @@ nav{
 .exit{
     background: url('./door.png')  no-repeat;
     background-size: contain;
+}
+
+key-img{
+  justify-content: bottom;
+  align-items: baseline;
+ 
 }

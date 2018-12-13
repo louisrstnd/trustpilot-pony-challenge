@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './App.css';
 import MazeRow from './components/mazerow';
+import arrow from './arrows.png';
 
 const directions = {
   "ArrowUp": "north",
@@ -121,7 +122,7 @@ class App extends Component {
         
  
       }
-      , 300
+      , 200
     )
 
   }
@@ -263,9 +264,10 @@ class App extends Component {
   isDomokunAround= (index) =>{
     const {domoku} = this.state;
     const coord = this.coordinates(index);
+
     switch(domoku){
      case this.coordinatesToIndex([coord[0] - 1, coord[1]]):
-         return true
+        return true
     case this.coordinatesToIndex([coord[0] + 1, coord[1]]):
         return true
     case this.coordinatesToIndex([coord[0], coord[1] + 1]):
@@ -362,31 +364,34 @@ class App extends Component {
     return (
       <div>
         <header className="bg-black-40 w-100 pv3 ph4-m ph5-l pa4">
-        <nav className="f6 fw6  tracked" >
-        <div className="measure">
-        <label htmlFor="width" className="select-label db mb2 pr3">Select maze width</label>
+        <nav className="f6 tracked items-baseline" >
+        <div className="measure pr3">
+        <label htmlFor="width" className="select-label di mb2 pr1">width :</label>
         <select id="width"  onChange={this.onDimChange}>
     <option value="15">15</option>
     <option value="20">20</option>
     <option value="25">25</option>
       </select>
       </div>
-      <div className="measure">
-      <label htmlFor="height" className="select-label db mb2 pr3">Select maze height</label>
+      <div className="measure pr3">
+      <label htmlFor="height" className="select-label di mb2 pr1">height :</label>
         <select id="height"  onChange={this.onDimChange}>
     <option value="15">15</option>
     <option value="20">20</option>
     <option value="25">25</option>
       </select>
       </div>
-        <button className="f6 link dim br2 ph3 pv2 mb2 dib white bg-hot-pink" onClick={this.createMaze}>Create new Maze</button>
-         <button className="f6 link dim br2 ph3 pv2 mb2 dib white bg-hot-pink" id="autoplay" onClick={this.autoPlay}> auto play</button>
-        <label><span className="normal black-60"> Use keyboard arrows to move the pony or click autoplay !</span></label>
+      <div>
+        <button className="f6 link dim br2 ph3 pv1 mr2 mb2 mt2 dib white bg-hot-pink" onClick={this.createMaze}>Create Maze</button>
+         <button className="f6 link dim br2 ph3 pv1 mb2 mr2 mt2 dib white bg-hot-pink" id="autoplay" onClick={this.autoPlay}> Auto play</button>
+         </div>
+        <label className ="items-baseline"><span className="normal black-60 "> Use <img className="key-img" src={arrow} alt="arrows"  height="35rem"/> to move the pony or click autoplay !</span></label>
         </nav>
         </header>
-        <div className="container pa4" style={{backgroundImage : `url(${this.state.backgroundUrl})`
+        <div className="container pa4 flex-auto" style={{backgroundImage : `url(${this.state.backgroundUrl})`
                                          , backgroundRepeat : "no-repeat"
-                                          , backgroundSize : "contain" }}>
+                                          , backgroundSize : "contain" 
+                                         }}>
           {rows.map((d,i) => <MazeRow key={i} walls={d} />)}
         </div>
 

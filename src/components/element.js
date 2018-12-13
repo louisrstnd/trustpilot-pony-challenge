@@ -29,13 +29,13 @@ class Element extends Component {
         }
         
          
-     const h =  75 / this.props.element.height
-      elementStyle["height"] = h + "vh"
-      elementStyle["width"] = h + "vh"
+     const h =  70 / this.props.element.height
+      elementStyle["height"] = h + "vmin"
+      elementStyle["width"] = h + "vmin"
 
     return (
 
-      <div className ={elementClass.join(" ")} style={elementStyle}>
+      <div className = {"b--blue " + elementClass.join(" ")} style={elementStyle}>
         {isExitPath ? "." : ""
         }
        </div>
