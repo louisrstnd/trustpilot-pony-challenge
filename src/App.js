@@ -4,12 +4,14 @@ import './App.css';
 import MazeRow from './components/mazerow';
 import arrow from './arrows.png';
 
-const directions = {
+const ArrowKeyMap = {
   "ArrowUp": "north",
   "ArrowDown": "south",
   "ArrowLeft": "west",
   "ArrowRight": "east",
 }
+
+const DIRECTIONS = ["north", "south", "west", "east"];
 
 const opposite = {
   "south": "north",
@@ -50,7 +52,7 @@ class App extends Component {
   createMaze = (event) => {
     let {newWidth, newHeight} = this.state;
   
-    console.log(newWidth, newHeight)
+    
     fetch("https://ponychallenge.trustpilot.com/pony-challenge/maze", {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -64,10 +66,11 @@ class App extends Component {
       .then(response => {
         this.setState({ mazeId: response.maze_id
                  , backgroundUrl : ''
-                 , active: true}
+                 , active: true
+                 , auto : false}
                  , this.refreshMaze
                  );
-        console.log("maze", response.maze_id)
+        console.log("maze id : ", response.maze_id)
       }
       ).catch(err => console.log(err))
 
@@ -89,8 +92,7 @@ class App extends Component {
         , pony: response.pony[0]
         , domokun: response.domokun[0]
         , exit: response["end-point"][0]
-        
-  
+          
       },this.findPath)
      
     })
@@ -101,13 +103,23 @@ class App extends Component {
     this.setState({auto: true}, this.movePoney)
    
   }
-  movePoney = (direction ='', interval) =>{
-    const {directions, active} = this.state;
+  movePoney = (direction ='') =>{
+    const {directions, active, pony} = this.state;
     if(!active){
       return;
     }
+    // if no direction is specified i.e auto play mode
     if(direction === ''){
       direction = directions[0];
+      
+
+      if(this.isDomokunAhead(pony)){
+        console.log("warning ! domokun ahead !")
+        // The monster can't get you if you don't move, so make an impossible move and wait...
+        const available = this.getAvailableDirections(pony);
+        direction = DIRECTIONS.filter(d => !available.includes(d))[0];
+      }
+
     }
     fetch("https://ponychallenge.trustpilot.com/pony-challenge/maze/" + this.state.mazeId, {
       method: 'post',
@@ -117,7 +129,7 @@ class App extends Component {
       })
     }).then(response => response.json())
       .then(response => {
-        
+        // if the game is over, then fetch the background image
         if(response.state !== "active"){
           this.setState({backgroundUrl: "https://ponychallenge.trustpilot.com/" +response["hidden-url"]
                         , active : false
@@ -132,12 +144,12 @@ class App extends Component {
 
    
   
-
+// method for manual move
   moveKey = (event) => {
 
-    if (event.key in directions) {
-      
-     this.setState({auto:false}, this.movePoney(directions[event.key]));
+    if (event.key in ArrowKeyMap) {
+      // pauses autoplay if it was on
+     this.setState({auto:false}, this.movePoney(ArrowKeyMap[event.key]));
       
         
     }
@@ -145,14 +157,14 @@ class App extends Component {
 
   }
 
-  createPath = (start, direction, path, exit, directions) => {
+  createPath = (start, move, path, exit, directions) => {
     const {auto, active} = this.state;
-    const possibleDirections = this.getAvailableDirections(start);
+    const availableDirections = this.getAvailableDirections(start);
     
     if (start === exit) {
      
       if(auto && active){
-       
+       // if autoplay is on, then update state and trigger next move
       this.setState({exitPath : path
                     , directions: directions}
                     , this.movePoney);
@@ -162,17 +174,17 @@ class App extends Component {
           , directions: directions})
       }
     }
-    for (let i in possibleDirections) {
-      if (direction === undefined || possibleDirections[i] !== opposite[direction]) {
-        const newPosition = this.getNextPosition(start, possibleDirections[i]);
+    for (let i in availableDirections) {
+      if (move === undefined || availableDirections[i] !== opposite[move]) {
+        const newPosition = this.getNextPosition(start, availableDirections[i]);
         if (!path.includes(newPosition)) {
           const newPath = [];
           newPath.push(...path);
           newPath.push(newPosition);
           const newDirections = [];
           newDirections.push(...directions);
-          newDirections.push(possibleDirections[i]);
-          this.createPath(newPosition, possibleDirections[i], newPath, exit, newDirections);
+          newDirections.push(availableDirections[i]);
+          this.createPath(newPosition, availableDirections[i], newPath, exit, newDirections);
         }
       }
     }
@@ -250,23 +262,13 @@ class App extends Component {
   }
 
 
-  isDomokunAround= (index) =>{
-    const {domoku} = this.state;
-    const coord = this.coordinates(index);
-
-    switch(domoku){
-     case this.coordinatesToIndex([coord[0] - 1, coord[1]]):
-        return true
-    case this.coordinatesToIndex([coord[0] + 1, coord[1]]):
-        return true
-    case this.coordinatesToIndex([coord[0], coord[1] + 1]):
-        return true
-    case this.coordinatesToIndex([coord[0], coord[1] - 1]):
-        return true
-
-    default :return false;
+  isDomokunAhead= (index) =>{
+    const {domokun, exitPath} = this.state;
+    const distance = exitPath.indexOf(domokun);
+    if(distance>-1 && distance<3 ){
+      return true;
     }
-  
+    return false;
 
   }
 
