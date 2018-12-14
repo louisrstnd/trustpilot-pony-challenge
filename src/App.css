@@ -46,17 +46,17 @@ nav{
   border-left: 2px solid black;
 }
 .pony{
-  background: url('./pony.png')  no-repeat;
+  background: url('./media/pony.png')  no-repeat;
   background-size: cover;
 }
 .domokun{
-  background: url('./domokun.png')  no-repeat;
+  background: url('./media/domokun.png')  no-repeat;
   background-size: cover;
 
 }
 
 .exit{
-    background: url('./door.png')  no-repeat;
+    background: url('./media/door.png')  no-repeat;
     background-size: contain;
 }
 

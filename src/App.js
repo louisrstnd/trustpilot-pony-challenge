@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './App.css';
 import MazeRow from './components/mazerow';
-import arrow from './arrows.png';
+import arrow from './media/arrows.png';
 
 const KEYMPAP = {
   "ArrowUp": "north",
