@@ -4,10 +4,13 @@
   flex-wrap: wrap;
 }
 
+
 nav{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
+ 
 }
 
 .container {
@@ -17,9 +20,6 @@ nav{
   flex-wrap: wrap;
   justify-content: center;
   
-  
-  
-  
 }
 .row{
   display: flex;
@@ -27,18 +27,10 @@ nav{
 }
 
 .element {
-  
-  /*display:inline-block;*/
   text-align: center;
   font-size:1rem;
-  
   font-weight: bold;
   color: grey;
-  transition: all 0.3s linear;
-  
-
-
-    /* box-shadow: inset 0 0 0 3px #149df2; */
 }
 
 .north{
@@ -56,16 +48,13 @@ nav{
 .pony{
   background: url('./pony.png')  no-repeat;
   background-size: cover;
-  
 }
 .domokun{
   background: url('./domokun.png')  no-repeat;
   background-size: cover;
 
 }
-/* .exitPath{
-  background-color : rgba(255, 204, 210, .7);
-} */
+
 .exit{
     background: url('./door.png')  no-repeat;
     background-size: contain;
@@ -75,4 +64,7 @@ key-img{
   justify-content: bottom;
   align-items: baseline;
  
+}
+.buttons{
+  background-color: #670909
 }

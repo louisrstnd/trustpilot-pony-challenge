@@ -36,8 +36,8 @@ class Element extends Component {
     return (
 
       <div className = {"b--blue " + elementClass.join(" ")} style={elementStyle}>
-        {isExitPath ? "." : ""
-        }
+{/*         {isExitPath ? "." : ""
+        }  */}
        </div>
       
     );
