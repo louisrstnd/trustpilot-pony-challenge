@@ -4,6 +4,8 @@ This is a solution to the trustpilot Pony challenge (https://ponychallenge.trust
 
 You can check out the app here : https://louisrstnd.github.io/trustpilotPonyChallenge/ 
 
+![screen capture](https://github.com/louisrstnd/trustpilotPonyChallenge/blob/master/Capture.JPG)
+
 ## Available Scripts
 
 In the project directory, you can run:
