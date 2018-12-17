@@ -31,6 +31,7 @@ nav{
   font-size:1rem;
   font-weight: bold;
   color: grey;
+  transition: all 0.3s ease-in-out;
 }
 
 .north{
@@ -45,20 +46,8 @@ nav{
 .west{
   border-left: 2px solid black;
 }
-.pony{
-  background: url('./media/pony.png')  no-repeat;
-  background-size: cover;
-}
-.domokun{
-  background: url('./media/domokun.png')  no-repeat;
-  background-size: cover;
 
-}
 
-.exit{
-    background: url('./media/door.png')  no-repeat;
-    background-size: contain;
-}
 
 key-img{
   justify-content: bottom;
@@ -67,4 +56,10 @@ key-img{
 }
 .buttons{
   background-color: #670909
+}
+.images{
+
+    max-width: 100%;
+    max-height: 100%;
+    transition: all 0.3s ease-in-out;
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-
-
-
+import pony from '../media/pony.png';
+import domokun from '../media/domokun.png';
+import door from '../media/door.png';
 
 class Element extends Component {
 
@@ -38,6 +38,12 @@ class Element extends Component {
       <div className = {"b--blue " + elementClass.join(" ")} style={elementStyle}>
 {/*         {isExitPath ? "." : ""
         }  */}
+        {
+        isPony? <img className="images" src={pony} alt="pony" />:
+        isDomokun ?  <img className="images" src={domokun} alt="domokun" /> :
+        isExit ? <img className="images" src={door} alt="door" /> :""
+    }
+
        </div>
       
     );

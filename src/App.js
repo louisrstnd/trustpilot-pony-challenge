@@ -4,6 +4,7 @@ import './App.css';
 import MazeRow from './components/mazerow';
 import arrow from './media/arrows.png';
 
+
 const KEYMPAP = {
   "ArrowUp": "north",
   "ArrowDown": "south",
@@ -92,21 +93,21 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         this.setState({
-          walls: response.data
+            walls: response.data
           , width: response.size[0]
           , height: response.size[1]
           , pony: response.pony[0]
           , domokun: response.domokun[0]
           , exit: response["end-point"][0]
 
-        }, this.findPath)
+        }, this.calculatePath)
       })
   }
 
-  findPath = () => {
+  calculatePath = () => {
     const { pony, exit } = this.state;
 
-    this.createPath(pony, undefined, [pony], exit, []);
+    this.exploreMaze(pony, undefined, [pony], exit, []);
 
   }
 
@@ -114,6 +115,10 @@ class App extends Component {
   /**
    * method attached to autoplay button
    * set "auto" state to true then initiate first movement with "movePony"
+   * 
+   * the auto process use callback functions in the setState methods to manage the asynchronous property of setState.
+   * the cycle goes like : movePony -> refreshMaze -> calculatePath -> movePony and repeat until game is over
+   * 
    */
   autoPlay = () => {
     if (this.state.auto) {
@@ -190,7 +195,7 @@ class App extends Component {
    * Explores all the possible paths from the starting point until no move is possible 
    * or the exit is reached
    */
-  createPath = (start, move, path, exit, directions) => {
+  exploreMaze = (start, move, path, exit, directions) => {
     const { auto, active } = this.state;
     const availableDirections = this.getAvailableDirections(start);
 
@@ -208,9 +213,9 @@ class App extends Component {
       else {
         // otherwise, just update the state
         this.setState({
-          exitPath: path
-          , directions: directions
-        })
+                      exitPath: path
+                    , directions: directions
+             })
       }
     }
 
@@ -220,13 +225,11 @@ class App extends Component {
         const newPosition = this.getNextPosition(start, availableDirections[i]);
         if (!path.includes(newPosition)) {
           //if we're not going backwards, then add the new position to the path and proceed
-          const newPath = [];
-          const newDirections = [];
-          newPath.push(...path);
+          const newPath = [...path]
+          const newDirections = [...directions]
           newPath.push(newPosition);
-          newDirections.push(...directions);
           newDirections.push(availableDirections[i]);
-          this.createPath(newPosition, availableDirections[i], newPath, exit, newDirections);
+          this.exploreMaze(newPosition, availableDirections[i], newPath, exit, newDirections);
         }
       }
     }
@@ -241,7 +244,7 @@ class App extends Component {
     const { walls } = this.state;
     let directions = new Set(DIRECTIONS);
 
-    const coords = this.coordinates(pony);
+    const coords = this.indexToCoordinates(pony);
 
     if (coords[0] === 0) {
       directions.delete("north");
@@ -259,7 +262,7 @@ class App extends Component {
       directions.delete("south");
     }
 
-    if (this.IsEastWall(coords)) {
+    if (this.isEastWall(coords)) {
       directions.delete("east");
     }
 
@@ -279,7 +282,7 @@ class App extends Component {
     return false;
   }
 
-  IsEastWall = (coords) => {
+  isEastWall = (coords) => {
     const { walls, width } = this.state;
     if (coords[1] === width - 1) {
       return true;
@@ -291,7 +294,7 @@ class App extends Component {
     return false;
   }
 
-  coordinates = (index) => {
+  indexToCoordinates = (index) => {
     const width = this.state.width;
     return ([Math.floor(index / width), index % width]);
 
@@ -312,7 +315,7 @@ class App extends Component {
       return true;
     }
 
-    const coord = this.coordinates(exitPath[1]);
+    const coord = this.indexToCoordinates(exitPath[1]);
     const indexes = [];
     indexes.push(this.coordinatesToIndex([coord[0] - 1, coord[1]]))
     indexes.push(this.coordinatesToIndex([coord[0] + 1, coord[1]]))
@@ -329,7 +332,7 @@ class App extends Component {
 
   getNextPosition = (index, move) => {
 
-    const coord = this.coordinates(index);
+    const coord = this.indexToCoordinates(index);
 
     switch (move) {
       case "north":
@@ -402,8 +405,6 @@ class App extends Component {
       rows.push(row);
     }
 
-
-
     return (
       <div>
         <header className="bg-black-50 w-100 ph4-m ph5-l pa2">
@@ -441,7 +442,8 @@ class App extends Component {
           , backgroundSize: "contain"
         }}>
           {rows.map((d, i) => <MazeRow key={i} walls={d} />)}
-        </div>
+      
+                                          </div>
 
       </div>
 
