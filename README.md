@@ -2,7 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 This is a solution to the trustpilot Pony challenge (https://ponychallenge.trustpilot.com/index.html) 
 
-You can check out the app here : https://louisrstnd.github.io/trustpilotPonyChallenge/ 
+You can check out the app here : https://louisrstnd.github.io/trustpilot-pony-challenge/
 
 ![screen capture](https://github.com/louisrstnd/trustpilotPonyChallenge/blob/master/Capture.JPG)
 
