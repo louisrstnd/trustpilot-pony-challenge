@@ -56,7 +56,9 @@ class App extends Component {
     document.addEventListener("keyup", this.moveKey);
   }
 
-
+/**
+ * creates a new maze using the input parameters and the API
+ */
   createMaze = (event) => {
     let { newWidth, newHeight } = this.state;
 
@@ -84,6 +86,10 @@ class App extends Component {
       }).catch(err => console.log(err))
   }
 
+
+  /**
+   * Refreshes the maze state (gets the walls, pony, monster and exit positions)
+   */
   refreshMaze = () => {
     if (this.state.mazeId === '') {
       return;
@@ -104,6 +110,9 @@ class App extends Component {
       })
   }
 
+  /**
+   * initiates the explore maze call
+   */
   calculatePath = () => {
     const { pony, exit } = this.state;
 
@@ -111,83 +120,6 @@ class App extends Component {
 
   }
 
-
-  /**
-   * method attached to autoplay button
-   * set "auto" state to true then initiate first movement with "movePony"
-   * 
-   * the auto process use callback functions in the setState methods to manage the asynchronous property of setState.
-   * the cycle goes like : movePony -> refreshMaze -> calculatePath -> movePony and repeat until game is over
-   * 
-   */
-  autoPlay = () => {
-    if (this.state.auto) {
-      this.setState({ auto: false });
-      return;
-    }
-    this.setState({ auto: true }, this.movePony)
-
-  }
-
-  /**
-   * make the pony move one step
-   */
-  movePony = (direction = '') => {
-    const { directions, active, pony } = this.state;
-    // make sure the current game is not finished
-    if (!active) {
-      return;
-    }
-    // if no direction is specified i.e auto play mode then take the first direction from the calculated exit path
-    if (direction === '') {
-      direction = directions[0];
-
-      // check if the monster isn't far away
-      if (this.isDomokunAhead()) {
-        console.log("warning ! domokun ahead !")
-        // The monster can't get you if you don't move, so make an impossible move and wait...
-        const available = this.getAvailableDirections(pony);
-        direction = DIRECTIONS.filter(d => !available.includes(d))[0];
-      }
-
-    }
-    // API call to make the chosen move
-    fetch(API.maze + this.state.mazeId, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        "direction": direction
-      })
-    }).then(response => response.json())
-      .then(response => {
-        // if the game is over, then fetch the background image
-        if (response.state !== "active") {
-          this.setState({
-            backgroundUrl: API.root + response["hidden-url"]
-            , active: false
-            , auto: false
-          }
-            , this.refreshMaze);
-        }
-        else {
-          // get the new maze state
-          this.refreshMaze();
-        }
-      })
-  }
-
-
-
-  /**
-   *  method for manual move
-   *  */
-  moveKey = (event) => {
-
-    if (event.key in KEYMPAP) {
-      // pauses autoplay if it was on
-      this.setState({ auto: false }, this.movePony(KEYMPAP[event.key]));
-    }
-  }
 
 
   /**
@@ -234,6 +166,86 @@ class App extends Component {
       }
     }
   }
+
+
+  /**
+   * method attached to autoplay button
+   * set "auto" state to true then initiate first movement with "movePony"
+   * 
+   * the auto process use callback functions in the setState methods to manage the asynchronous property of setState.
+   * the cycle goes like : movePony -> refreshMaze -> calculatePath -> movePony and repeat until game is over
+   * 
+   */
+  autoPlay = () => {
+    if (this.state.auto) {
+      this.setState({ auto: false });
+      return;
+    }
+    this.setState({ auto: true }, this.movePony)
+
+  }
+
+  /**
+   * make the pony move one step
+   */
+  movePony = (direction = '') => {
+    const { directions, active, pony } = this.state;
+    // make sure the current game is not finished
+    if (!active) {
+      return;
+    }
+    // if no direction is specified i.e auto play mode then take the first direction from the calculated exit path
+    if (direction === '') {
+      direction = directions[0];
+
+      // check if the monster isn't far away
+      if (this.isDomokunAhead()) {
+        console.log("warning ! domokun ahead !")
+        // The monster is like the T-Rex, it won't see you if you don't move, so wait for the path to be cleared and run!
+        const available = this.getAvailableDirections(pony);
+        direction = DIRECTIONS.filter(d => !available.includes(d))[0];
+      }
+
+    }
+    // API call to make the chosen move
+    fetch(API.maze + this.state.mazeId, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "direction": direction
+      })
+    }).then(response => response.json())
+      .then(response => {
+        // if the game is over, then fetch the background image
+        if (response.state !== "active") {
+          this.setState({
+            backgroundUrl: API.root + response["hidden-url"]
+            , active: false
+            , auto: false
+          }
+            , this.refreshMaze);
+        }
+        else {
+          // get the new maze state
+          this.refreshMaze();
+        }
+      })
+  }
+
+
+
+  /**
+   *  method for manual move
+   *  */
+  moveKey = (event) => {
+
+    if (event.key in KEYMPAP) {
+      // pauses autoplay if it was on
+      this.setState({ auto: false }, this.movePony(KEYMPAP[event.key]));
+    }
+  }
+
+
 
   /**
    * gets all available directions from a given index (ie directions 
