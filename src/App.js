@@ -388,8 +388,8 @@ class App extends Component {
     let i;
     let j = 0;
     let id = 0;
-    const height = this.state.height;
-    const width = this.state.width;
+    const {height, width, walls, pony, domokun, exit, exitPath} = this.state;
+  
 
 
     for (i = 0; i < height; i++) {
@@ -397,12 +397,12 @@ class App extends Component {
       for (j = 0; j < width; j++) {
         const element = {};
         element["key"] = id;
-        element["walls"] = this.state.walls[id];
-        element["isPony"] = id === this.state.pony ? true : false;
-        element["isDomokun"] = id === this.state.domokun ? true : false;
-        element["isExit"] = id === this.state.exit ? true : false;
-        element["isExitPath"] = this.state.exitPath.includes(id) ? true : false;
-        element["height"] = this.state.height;
+        element["walls"] = walls[id];
+        element["isPony"] = id === pony ? true : false;
+        element["isDomokun"] = id === domokun ? true : false;
+        element["isExit"] = id === exit ? true : false;
+        element["isExitPath"] = exitPath.includes(id) ? true : false;
+        element["height"] = height;
         if (i === height - 1) {
           element["walls"].push("south");
         }

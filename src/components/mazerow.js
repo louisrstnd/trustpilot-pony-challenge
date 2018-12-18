@@ -7,7 +7,7 @@ class MazeRow extends Component {
   
     return (
       <div className = "row">
-      {this.props.walls.map(d => <Element  key={d.key} element={d}/>)}
+    {this.props.walls.map(d => <Element  key={d.key} element={d} ponyState={this.props.ponyState}/>)}
       </div>
      
       

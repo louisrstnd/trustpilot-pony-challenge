@@ -31,20 +31,20 @@ nav{
   font-size:1rem;
   font-weight: bold;
   color: grey;
-  transition: all 0.3s ease-in-out;
+  
 }
 
 .north{
-  border-top: 2px solid  black;
+  border-top: 2px solid  #811818;
 }
 .east{
-  border-right:2px solid  black;
+  border-right:2px solid  #811818;
 }
 .south{
-  border-bottom:2px solid black;
+  border-bottom:2px solid #811818;
 }
 .west{
-  border-left: 2px solid black;
+  border-left: 2px solid #811818;
 }
 
 
@@ -61,5 +61,31 @@ key-img{
 
     max-width: 100%;
     max-height: 100%;
-    transition: all 0.3s ease-in-out;
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+    
+}
+.pony-image{
+  
+  animation : run 0.5s ease-in-out infinite;
+}
+.domokun-image{
+  animation : run 1s ease-in infinite;
+ 
+}
+.door-image{
+  animation: grow 1s ease-in-out infinite;
+  
+}
+@keyframes run {
+  0%   { transform: translate(0,0); }
+  50% { transform: translate(0, -3px); 
+        }
+  100% {transform: translate(0.0);}
+}
+
+@keyframes grow {
+  0%   { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }

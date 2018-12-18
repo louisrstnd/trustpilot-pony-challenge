@@ -7,7 +7,7 @@ class Element extends Component {
 
     render() {
 
-        const {walls, isPony, isDomokun, isExit, isExitPath} = this.props.element;
+        const {walls,height, isPony, isDomokun, isExit, isExitPath} = this.props.element;
         const elementStyle = {};
 
         const elementClass = ["element"];
@@ -29,19 +29,19 @@ class Element extends Component {
         }
         
          
-     const h =  70 / this.props.element.height
+     const h =  70 / height
       elementStyle["height"] = h + "vmin"
       elementStyle["width"] = h + "vmin"
 
     return (
 
-      <div className = {"b--blue " + elementClass.join(" ")} style={elementStyle}>
+      <div className = {elementClass.join(" ")} style={elementStyle}>
 {/*         {isExitPath ? "." : ""
         }  */}
         {
-        isPony? <img className="images" src={pony} alt="pony" />:
-        isDomokun ?  <img className="images" src={domokun} alt="domokun" /> :
-        isExit ? <img className="images" src={door} alt="door" /> :""
+        isPony? <img className="images pony-image" src={pony} alt="pony" />:
+        isDomokun ?  <img className="images domokun-image" src={domokun} alt="domokun" /> :
+        isExit ? <img className="images door-image" src={door} alt="door" /> :""
     }
 
        </div>
